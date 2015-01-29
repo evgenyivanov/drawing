@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Карандашный рисунок из вашего фото</title>
+		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	</head>
+
+	<body>
+
+		<!-- Upload form. Note enctype attribute! -->
+		<form action="/" method="post" onsubmit="$('#wait').show();" enctype="multipart/form-data">
+			{% csrf_token %}
+			<p>{{ form.non_field_errors }}</p>
+			<p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+			<p>
+				{{ form.docfile.errors }}
+				{{ form.docfile }}
+			</p>
+
+			<p>{{ form.alpha.label_tag}} {{ form.alpha }} {{ form.alpha.errors }}</p>
+			<p>{{ form.sepia}} {{ form.sepia.help_text }} {{ form.sepia.errors }}</p>
+
+			<p>{{ form.find_contur}} {{ form.find_contur.help_text }} {{ form.contur.errors }}</p>
+
+			<p><input type="submit" value="Загрузить" /></p>
+		</form>
+
+	</body>
+
+	<div id="wait" style="position:absolute;top:20px;left:20px;display: none"><img width="200px" height= "175px" src="/static/pencils.gif"/></div>
+
+</html>
