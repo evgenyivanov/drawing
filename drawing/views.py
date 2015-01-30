@@ -31,7 +31,15 @@ def home(request):
 
         if form.is_valid():
 
-            if 'find_contur' in request.POST:
+            filters_type = int(form.cleaned_data['choice_field'])
+
+            if filters_type == 3:
+                im1 = Image.open(request.FILES['docfile']).convert('LA')
+                response = HttpResponse(mimetype="image/png")
+                im1.save(response, "PNG")
+                return response
+
+            if filters_type == 4:
                 im1 = Image.open(request.FILES['docfile']).convert('L')
                 im1 = im1.filter(ImageFilter.CONTOUR)
                 response = HttpResponse(mimetype="image/png")
@@ -60,7 +68,7 @@ def home(request):
 
 
 
-            if 'sepia' in request.POST:
+            if filters_type == 2:
                 sepia = make_linear_ramp((255, 240, 192))
                 #im1 = ImageOps.autocontrast(im1)
                 HttpResponse(4)
@@ -72,7 +80,7 @@ def home(request):
             return response
 
     else:
-        form = DocumentForm(initial={'alpha': '1.1'}) # A empty, unbound form
+        form = DocumentForm(initial={'alpha': '1.1','choice_field':'1'}) # A empty, unbound form
 
 
 

@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Карандашный рисунок из вашего фото</title>
+		<title>Графические фильтры</title>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="/static/drawing.js"></script>
 	</head>
 
 	<body>
@@ -18,10 +19,9 @@
 				{{ form.docfile }}
 			</p>
 
-			<p>{{ form.alpha.label_tag}} {{ form.alpha }} {{ form.alpha.errors }}</p>
-			<p>{{ form.sepia}} {{ form.sepia.help_text }} {{ form.sepia.errors }}</p>
+			<p>{{ form.choice_field.label_tag}} {{ form.choice_field }} {{ form.choice_field.errors }}</p>
+			<p id="alpha">{{ form.alpha.label_tag}} {{ form.alpha }} {{ form.alpha.errors }}</p>
 
-			<p>{{ form.find_contur}} {{ form.find_contur.help_text }} {{ form.contur.errors }}</p>
 
 			<p><input type="submit" value="Загрузить" /></p>
 		</form>
