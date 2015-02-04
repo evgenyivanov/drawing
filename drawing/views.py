@@ -1,13 +1,35 @@
 # -*- coding: utf-8 -*-
-from PIL import Image
-from PIL import ImageFilter
-from PIL import ImageOps
-
-
+import os
+from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont, ImageEnhance
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
 from drawing.forms import DocumentForm
+
+
+
+def add_watermark(in_file, text, angle=45, opacity=0.35):
+    FONT=os.path.join(os.path.dirname(__file__), 'ARIAL.TTF')
+    img = in_file.convert('RGB')
+    watermark = Image.new('RGBA', img.size, (0,0,0,0))
+    size = 2
+    n_font = ImageFont.truetype(FONT, size)
+    n_width, n_height = n_font.getsize(text)
+    while n_width+n_height < watermark.size[0]:
+        size += 2
+        n_font = ImageFont.truetype(FONT, size)
+        n_width, n_height = n_font.getsize(text)
+    draw = ImageDraw.Draw(watermark, 'RGBA')
+    draw.text(((watermark.size[0] - n_width) / 2,
+              (watermark.size[1] - n_height) / 2),
+              text, font=n_font)
+    watermark = watermark.rotate(angle,Image.BICUBIC)
+    alpha = watermark.split()[3]
+    alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
+    watermark.putalpha(alpha)
+    return Image.composite(watermark, img, watermark)
+
+
 
 
 def make_linear_ramp(white):
@@ -45,6 +67,15 @@ def home(request):
                 response = HttpResponse(mimetype="image/png")
                 im1.save(response, "PNG")
                 return response
+
+            if filters_type == 5:
+                im1 = Image.open(request.FILES['docfile'])
+                im1 = add_watermark(im1,'JULIA CORONELLI ARCHIVE')
+                response = HttpResponse(mimetype="image/png")
+                im1.save(response, "PNG")
+                return response
+
+
 
 
             alpha = float(form.cleaned_data['alpha'])
